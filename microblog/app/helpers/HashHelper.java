@@ -2,6 +2,12 @@ package helpers;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+/**
+ * HelperClass for hashing the password
+ * and checking if a provided plain text corresponds to a hashed password
+ * @author benjamin
+ *
+ */
 public class HashHelper {
 	
 	/**

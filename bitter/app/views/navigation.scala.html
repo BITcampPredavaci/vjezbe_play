@@ -1,0 +1,42 @@
+@(location: String)(implicit currentUser: User = SessionHelper.currentUser(ctx()) )
+<nav class="navbar navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/"> Bitter </a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+          	@* give the li the class active if location has the value index *@
+            <li class='@("active".when(location == null || location == "" || location == "index"))'><a href="/">Home</a></li>
+            <li class='@("active".when(location == "about"))'><a href="/about">About</a></li>
+             <li class='@("active".when(location == "users"))'><a href="/users">Users</a></li>
+          </ul>
+          
+          @if(currentUser == null){
+          <ul class="nav navbar-nav pull-right">
+          	@* give the li the class active if location has the value index *@
+            <li class='@("active".when(location == "register"))'><a href="/register">Register</a></li>
+            <li class='@("active".when(location == "login"))'><a href="/login">Login</a></li>
+          </ul>
+          } else {
+          <ul class='nav navbar-nav pull-right'>
+		          <li class='@("active".when(location == "user")) dropdown'>
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">@currentUser.username <span class="caret"></span></a>
+		          <ul class="dropdown-menu" role="menu">
+		             <li role="presentation"><a role="menuitem" tabindex="-1" href='/@("@"+currentUser.username)'>Profile</a></li>
+					<li role="presentation"><a role="menuitem" tabindex="-1" href='@routes.UserController.edit(currentUser.username)'>Edit</a></li>		         
+		            <li class="divider"></li>
+		            <li><a href="@routes.SessionController.logout()">Logout</a></li>
+		          </ul>
+		        </li>
+	        </ul>
+		  }
+     </div>
+  </div>
+</nav>

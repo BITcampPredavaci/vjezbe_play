@@ -1,0 +1,33 @@
+@(user: User)(postForm: Form[Post])
+
+
+
+@main(user.username, "user"){
+	
+	<div class="container">
+	<div class="row">
+		<div class="col-md-3">
+			<img src='@routes.Assets.at("images/default-avatar.png")' class="avatar-profile"/>
+				<h3> @user.username </h3>
+			<div class=''>
+				@if(SessionHelper.currentUser(ctx()) == user){
+				@views.html.post._postForm(postForm, "/post/new")
+				} else {
+					<a href="#" class="btn btn-primary"> Follow </a>
+				}
+			</div> 
+		</div>
+		<div class='col-md-8 col-md-offset-1'>
+			<h1> User Posts: @user.posts.size() </h1>
+			@for(post <- user.posts){
+				<li> @post.content, at @post.updatedAt
+					@if(SessionHelper.currentUser(ctx()) == user){
+						<a href='@routes.PostController.delete(post.id)' onclick="return confirm('Are you sure you want to delete this post?');"
+					class="btn btn-danger btn-xs">Delete</a>
+					}
+				 </li>
+			}
+		</div>
+	</div>
+	</div>
+}

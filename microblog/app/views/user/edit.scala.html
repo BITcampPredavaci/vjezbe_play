@@ -1,0 +1,6 @@
+@(userForm: Form[User])(currentUser: User)
+@main("Edit", "user"){
+	
+	<h1 class='center-text'> Edit User </h1>
+	@_userForm(userForm, "/@"+currentUser.username+"/edit")
+}
