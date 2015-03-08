@@ -15,5 +15,5 @@ dist
 /.settings
 /bin
 /cache
-./cache
+.cache
 
