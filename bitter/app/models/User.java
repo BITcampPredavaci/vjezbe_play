@@ -144,8 +144,6 @@ public class User extends Model {
 	public String validate() {
 		if (find.where().eq("email", email).findRowCount() > 0) {
 			User other = find.where().eq("email", email).findUnique();
-			System.out
-					.println("Other id: " + other.id + " This id: " + this.id);
 			if (other.id != this.id && this.id != 0)
 				return "Email taken";
 		}

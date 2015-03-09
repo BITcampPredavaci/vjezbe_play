@@ -16,6 +16,7 @@
             <li class='@("active".when(location == null || location == "" || location == "index"))'><a href="/">Home</a></li>
             <li class='@("active".when(location == "about"))'><a href="/about">About</a></li>
              <li class='@("active".when(location == "users"))'><a href="/users">Users</a></li>
+         	<li class='@("active".when(location == "contact"))'><a href="/contact">Contact</a></li>
           </ul>
           
           @if(currentUser == null){

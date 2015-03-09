@@ -16,4 +16,5 @@ dist
 /bin
 /cache
 .cache
+/conf/reference.conf
 
