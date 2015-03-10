@@ -55,6 +55,7 @@ public class User extends Model {
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="author")
 	public List<Post> posts;
+	
 
 	public User(String email, String password, String username) {
 		this.email = email;
