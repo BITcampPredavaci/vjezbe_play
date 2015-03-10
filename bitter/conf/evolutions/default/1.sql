@@ -17,6 +17,7 @@ create table bitter_user (
   email                     varchar(255),
   username                  varchar(255),
   password                  varchar(255),
+  admin                     boolean,
   created_at                timestamp not null,
   updated_at                timestamp not null,
   constraint uq_bitter_user_email unique (email),

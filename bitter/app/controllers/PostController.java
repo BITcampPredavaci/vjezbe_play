@@ -15,6 +15,9 @@ public class PostController extends Controller {
 	@Security.Authenticated(CurrentUserFilter.class)
 	public static Result create() {
 		Form<Post> submit = Form.form(Post.class).bindFromRequest();
+		if(submit.hasErrors()){
+			return ok(views.html.user.show.render(SessionHelper.currentUser(ctx()), submit));
+		}
 		Post p = submit.get();
 		p.author = SessionHelper.currentUser(ctx());
 		if (Post.create(p)) {

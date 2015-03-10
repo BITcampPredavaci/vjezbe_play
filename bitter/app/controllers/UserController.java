@@ -1,6 +1,6 @@
 package controllers;
 
-import helpers.CurrentUserFilter;
+import helpers.*;
 import play.data.Form;
 import play.mvc.*;
 import views.html.user.*;
@@ -13,7 +13,8 @@ import models.*;
  *
  */
 public class UserController extends Controller {
-
+	
+	@Security.Authenticated(AdminFilter.class)
 	public static Result index() {
 		return ok(index.render(User.all()));
 	}

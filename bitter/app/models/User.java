@@ -7,6 +7,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
@@ -55,14 +57,28 @@ public class User extends Model {
 	@UpdatedTimestamp
 	public Date updatedAt;
 	
+	
+	public boolean admin;
+	
+	
+	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="author")
 	public List<Post> posts;
 	
+	
+	public User(String email, String password, String username, boolean admin) {
+		this.email = email;
+		this.password = password;
+		this.username = username;
+		this.admin = admin;
+		//hashPassword();
+	}
 
 	public User(String email, String password, String username) {
 		this.email = email;
 		this.password = password;
 		this.username = username;
+		this.admin = false;
 		hashPassword();
 	}
 

@@ -16,3 +16,6 @@ Added contact form and connected the mailer-plugin. You should take a look at th
 <b> Add a conf/reference.conf file and set the smtp.username and smtrp.password variables there. </b>
 <i> Don't forget to add the cong/reference.conf file to your .gitignore.
 
+<h3> Version 3 </h3>
+
+We have added i18n messages to the project and an admin filter.
