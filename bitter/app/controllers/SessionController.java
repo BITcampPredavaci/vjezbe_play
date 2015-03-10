@@ -6,9 +6,17 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 import views.html.*;
-
+/**
+ * Handles login and logout functionality
+ * @author benjamin
+ *
+ */
 public class SessionController extends Controller {
-
+	/**
+	 * Helper class for the login
+	 * @author benjamin
+	 *
+	 */
 	public static class Login {
 		public String emailOrUsername;
 		public String password;

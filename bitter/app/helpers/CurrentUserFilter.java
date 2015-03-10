@@ -5,6 +5,12 @@ import controllers.routes;
 import play.mvc.Result;
 import play.mvc.Security;
 import play.mvc.Http.Context;
+/**
+ * We use this class as a controller action filter
+ * to ensure that only a logged in user can perform certain actions
+ * @author benjamin
+ *
+ */
 
 public class CurrentUserFilter extends Security.Authenticator {
 

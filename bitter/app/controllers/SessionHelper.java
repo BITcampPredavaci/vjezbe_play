@@ -2,6 +2,11 @@ package controllers;
 
 import models.User;
 import play.mvc.Http.Context;
+/**
+ * Helper to get the current user and to check if the user is an admin
+ * @author benjamin
+ *
+ */
 
 public class SessionHelper {
 	

@@ -5,6 +5,11 @@ import play.data.Form;
 import play.mvc.*;
 import models.*;
 
+/**
+ * Controller class for the Post model
+ * @author benjamin
+ *
+ */
 public class PostController extends Controller {
 
 	@Security.Authenticated(CurrentUserFilter.class)
@@ -19,7 +24,14 @@ public class PostController extends Controller {
 		}
 
 	}
-
+	
+	
+	/**
+	 * Deletes a post from the current user
+	 * If an attempt is made to delete someone else's post it will not go through
+	 * @param id the id of the post to be deleted
+	 * @return the profile page of the user
+	 */
 	@Security.Authenticated(CurrentUserFilter.class)
 	public static Result delete(long id) {
 		User currentUser = SessionHelper.currentUser(ctx());
