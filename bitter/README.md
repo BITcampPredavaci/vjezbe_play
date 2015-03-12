@@ -10,12 +10,22 @@ You will see some inconsistency in handling some functionality, this is bad in t
 to expose different ways to achieve the same thing.
 
 
-<h2> Version 2 </h2>
+<h1> Version 2 </h1>
 
 Added contact form and connected the mailer-plugin. You should take a look at the conf/application.conf file.
 <b> Add a conf/reference.conf file and set the smtp.username and smtrp.password variables there. </b>
-<i> Don't forget to add the cong/reference.conf file to your .gitignore.
+<i> Don't forget to add the cong/reference.conf file to your .gitignore. </i>
 
-<h3> Version 3 </h3>
+<h1> Version 3 </h1>
 
 We have added i18n messages to the project and an admin filter.
+
+<h1> Version 4 </h1>
+
+Added connection to mysql database.
+<ul>
+	<li> Add dependency to build.sbt </li>
+	<li> Change db settings in conf/application.conf </li>
+</ul>
+
+Added followers, see /models/User.java for the @ManyToMany setup
