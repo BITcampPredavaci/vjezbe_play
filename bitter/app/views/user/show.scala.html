@@ -11,9 +11,9 @@
 				<h3> @user.username </h3>
 			<div class=''>
 				@if(SessionHelper.currentUser(ctx()) == user){
-				@views.html.post._postForm(postForm, "/post/new")
+					@views.html.post._postForm(postForm, "/post/new")
 				} else {
-					<a href="#" class="btn btn-primary"> Follow </a>
+					<a href="@routes.UserController.follow(user.id)" class="btn btn-primary"> Follow </a>
 				}
 			</div> 
 		</div>
@@ -26,6 +26,10 @@
 					class="btn btn-danger btn-xs">Delete</a>
 					}
 				 </li>
+			}
+			<h1> Followers: </h1>
+			@for(follower <- user.followers){
+				<a href="@routes.UserController.show(follower.username)"> @follower.username </a>
 			}
 		</div>
 	</div>

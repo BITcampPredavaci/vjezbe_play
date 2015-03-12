@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -58,8 +59,17 @@ public class User extends Model {
 	public Date updatedAt;
 	
 	
+	
 	public boolean admin;
 	
+	@ManyToMany
+	@JoinTable(
+		      name="followers",
+		      joinColumns=
+		  {@JoinColumn(name="user_id", referencedColumnName="id")},
+		      inverseJoinColumns=
+		  {@JoinColumn(name="follower_id", referencedColumnName="id")})
+	public List<User> followers;
 	
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="author")
@@ -161,6 +171,13 @@ public class User extends Model {
 	public static void deleteUser(String username){
 		User.find(username).delete();
 	}
+	
+	public static void addFollower(long user_id, User follower){
+		User u = find.byId(user_id);
+		u.followers.add(follower);
+		u.save();
+	}
+	
 	/**
 	 * Authenticate a user given a email/username and password
 	 * @param usernameOrEmail the email/username of the user

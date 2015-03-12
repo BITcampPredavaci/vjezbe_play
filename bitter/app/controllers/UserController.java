@@ -93,6 +93,17 @@ public class UserController extends Controller {
 		SessionController.loginUser(u.username);
 		return redirect("/@" + u.username);
 	}
+	
+	/**
+	 * Handles the follow relation
+	 * @param id the user the current user is following
+	 * @return redirect to the followed users profile page
+	 */
+	public static Result follow(long id){
+		User.addFollower(id, SessionHelper.currentUser(ctx()));
+		return redirect(routes.UserController.show(User.find(id).username));
+	}
+	
 	/**
 	 * Delete the user with this username
 	 * @param username username of the user to be deleted

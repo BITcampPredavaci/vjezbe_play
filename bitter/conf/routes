@@ -16,6 +16,7 @@ GET    /@:username/edit     controllers.UserController.edit(username: String)
 POST   /@:username/edit     controllers.UserController.update(username: String)
 GET    /@:username/delete   controllers.UserController.delete(username: String)
 GET    /users               controllers.UserController.index()
+GET	   /follow/:id			controllers.UserController.follow(id: Long)
 
 GET    /login               controllers.SessionController.login()
 POST   /login               controllers.SessionController.loginSubmit()
