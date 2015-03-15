@@ -1,6 +1,7 @@
 package models;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -70,6 +71,14 @@ public class User extends Model {
 		      inverseJoinColumns=
 		  {@JoinColumn(name="follower_id", referencedColumnName="id")})
 	public List<User> followers;
+	
+	@ManyToMany
+	@JoinTable(name="followers",
+		      joinColumns=
+		  {@JoinColumn(name="follower_id", referencedColumnName="id")},
+		      inverseJoinColumns=
+		  {@JoinColumn(name="user_id", referencedColumnName="id")})
+	public List<User> following;
 	
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="author")

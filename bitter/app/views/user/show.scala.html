@@ -17,20 +17,41 @@
 				}
 			</div> 
 		</div>
-		<div class='col-md-8 col-md-offset-1'>
-			<h1> User Posts: @user.posts.size() </h1>
-			@for(post <- user.posts){
-				<li> @post.content, at @post.updatedAt
-					@if(SessionHelper.currentUser(ctx()) == user){
-						<a href='@routes.PostController.delete(post.id)' onclick="return confirm('Are you sure you want to delete this post?');"
-					class="btn btn-danger btn-xs">Delete</a>
+		<div class='col-md-8 col-md-offset-1'>					
+			<div role="tabpanel">
+
+  				<!-- Nav tabs -->
+			  <ul class="nav nav-tabs" role="tablist">
+			    <li role="presentation" class="active"><a href="#posts" aria-controls="posts" role="tab" data-toggle="tab">Posts @user.posts.size</a></li>
+			    <li role="presentation"><a href="#followers" aria-controls="followers" role="tab" data-toggle="tab">Followers @user.followers.size</a></li>
+			    <li role="presentation"><a href="#following" aria-controls="following" role="tab" data-toggle="tab">Following @user.following.size</a></li>
+			  </ul>
+			
+			  <!-- Tab panes -->
+			  <div class="tab-content">
+			    <div role="tabpanel" class="tab-pane active" id="posts">
+					@for(post <- user.posts){
+						<li> @post.content, at @post.updatedAt
+							@if(SessionHelper.currentUser(ctx()) == user){
+								<a href='@routes.PostController.delete(post.id)' onclick="return confirm('Are you sure you want to delete this post?');"
+							class="btn btn-danger btn-xs">Delete</a>
+							}
+						 </li>
 					}
-				 </li>
-			}
-			<h1> Followers: </h1>
-			@for(follower <- user.followers){
-				<a href="@routes.UserController.show(follower.username)"> @follower.username </a>
-			}
+			    </div><!-- end posts -->
+			    <div role="tabpanel" class="tab-pane" id="followers">
+					@for(follower <- user.followers){
+						<a href="@routes.UserController.show(follower.username)"> @follower.username </a>
+					}
+			    </div> <!--  end followers -->
+			    <div role="tabpanel" class="tab-pane" id="following">
+				    @for(following <- user.following){
+							<a href="@routes.UserController.show(following.username)"> @following.username </a>
+						}
+			    </div><!-- end following -->
+			  </div>
+			
+			</div>
 		</div>
 	</div>
 	</div>
