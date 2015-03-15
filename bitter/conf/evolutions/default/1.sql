@@ -4,22 +4,22 @@
 # --- !Ups
 
 create table post (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   content                   varchar(255),
   author_id                 bigint,
-  created_at                datetime not null,
-  updated_at                datetime not null,
+  created_at                timestamp not null,
+  updated_at                timestamp not null,
   constraint pk_post primary key (id))
 ;
 
 create table bitter_user (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   email                     varchar(255),
   username                  varchar(255),
   password                  varchar(255),
-  admin                     tinyint(1) default 0,
-  created_at                datetime not null,
-  updated_at                datetime not null,
+  admin                     boolean,
+  created_at                timestamp not null,
+  updated_at                timestamp not null,
   constraint uq_bitter_user_email unique (email),
   constraint uq_bitter_user_username unique (username),
   constraint pk_bitter_user primary key (id))
@@ -31,6 +31,10 @@ create table followers (
   follower_id                    bigint not null,
   constraint pk_followers primary key (user_id, follower_id))
 ;
+create sequence post_seq;
+
+create sequence bitter_user_seq;
+
 alter table post add constraint fk_post_author_1 foreign key (author_id) references bitter_user (id) on delete restrict on update restrict;
 create index ix_post_author_1 on post (author_id);
 
@@ -42,13 +46,17 @@ alter table followers add constraint fk_followers_bitter_user_02 foreign key (fo
 
 # --- !Downs
 
-SET FOREIGN_KEY_CHECKS=0;
+SET REFERENTIAL_INTEGRITY FALSE;
 
-drop table post;
+drop table if exists post;
 
-drop table bitter_user;
+drop table if exists bitter_user;
 
-drop table followers;
+drop table if exists followers;
 
-SET FOREIGN_KEY_CHECKS=1;
+SET REFERENTIAL_INTEGRITY TRUE;
+
+drop sequence if exists post_seq;
+
+drop sequence if exists bitter_user_seq;
 

@@ -16,6 +16,21 @@
 <body>
 	@*calling a partial view to display the navbar, bassing in the current app location*@
 	@navigation(nav)
+	@if(flash.get("success")){
+		<div class="alert alert-success" role="alert"> 
+			<div class="container">
+				@flash.get("success") 
+			</div>
+		</div>
+	}
+	@if(flash.get("error")){
+		<div class="alert alert-danger" role="alert"> 
+			<div class="container">
+				@flash.get("error") 
+			</div>
+		</div>
+	}
+	
 	@content
 </body>
 </html>
