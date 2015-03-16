@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.ArrayList;
+
 import helpers.MailHelper;
 import models.User;
 import play.Play;
@@ -13,9 +15,12 @@ import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
 import play.mvc.Controller;
 import play.mvc.Result;
+import models.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
 //include a specific folder(package) from views
+import views.html.static_pages.*;
 
 /**
  * A controller for our static pages-pages whose content we do not expect to
@@ -37,7 +42,7 @@ public class StaticPagesController extends Controller {
 	public static Result index() {
 		User currentUser = SessionHelper.currentUser(ctx());
 		if(currentUser == null)
-		return ok(index.render(null));
+		return ok(index.render(new ArrayList<Post>()));
 		else{
 			return ok(index.render(currentUser.getFeed()));
 		}
@@ -80,6 +85,8 @@ public class StaticPagesController extends Controller {
 					public Result apply(WSResponse response) {
 						//get the response as JSON
 						JsonNode json = response.asJson();
+						System.out.println(json);
+						System.out.println(temp.get("g-recaptcha-response"));
 						Form<Contact> submit = Form.form(Contact.class)
 								.bindFromRequest();
 						

@@ -29,3 +29,7 @@ Added connection to mysql database.
 </ul>
 
 Added followers, see /models/User.java for the @ManyToMany setup
+
+<h1> Version 5 </h1>
+
+We have added following, recaptcha and feed.
