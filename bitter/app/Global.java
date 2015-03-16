@@ -12,7 +12,7 @@ public class Global extends GlobalSettings {
 			Post p = new Post();
 			p.author = u;
 			p.content = "The very first post";
-			u.posts.add(p);
+			p.save();
 			User.create("test@mail.com", "123456", "test");
 			
 		}
