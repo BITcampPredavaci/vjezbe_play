@@ -1,8 +1,8 @@
 package models;
 
 import java.util.Date;
+import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -16,6 +16,7 @@ import play.db.ebean.Model;
 import com.avaje.ebean.annotation.CreatedTimestamp;
 import com.avaje.ebean.annotation.UpdatedTimestamp;
 
+@SuppressWarnings("serial")
 @Entity
 public class Post extends Model{
 	
@@ -56,6 +57,10 @@ public class Post extends Model{
 	
 	public static Post find(long id){
 		return find.byId(id);
+	}
+	
+	public static List<Post> getFeed(List<User> authors){
+		return find.where().in("author", authors).findList();
 	}
 
 }

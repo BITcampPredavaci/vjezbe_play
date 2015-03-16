@@ -1,11 +1,8 @@
 package controllers;
 
-import java.util.concurrent.TimeUnit;
-
-import com.fasterxml.jackson.databind.JsonNode;
-
 import helpers.MailHelper;
-import play.*;
+import models.User;
+import play.Play;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.data.validation.Constraints.Email;
@@ -13,11 +10,12 @@ import play.data.validation.Constraints.Required;
 import play.libs.F.Function;
 import play.libs.F.Promise;
 import play.libs.ws.WS;
-import play.libs.ws.WSRequestHolder;
 import play.libs.ws.WSResponse;
-import play.mvc.*;
+import play.mvc.Controller;
+import play.mvc.Result;
+
+import com.fasterxml.jackson.databind.JsonNode;
 //include a specific folder(package) from views
-import views.html.static_pages.*;
 
 /**
  * A controller for our static pages-pages whose content we do not expect to
@@ -37,7 +35,13 @@ public class StaticPagesController extends Controller {
 	}
 
 	public static Result index() {
-		return ok(index.render());
+		User currentUser = SessionHelper.currentUser(ctx());
+		if(currentUser == null)
+		return ok(index.render(null));
+		else{
+			return ok(index.render(currentUser.getFeed()));
+		}
+			
 	}
 
 	public static Result about() {

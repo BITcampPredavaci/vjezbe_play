@@ -104,6 +104,11 @@ public class UserController extends Controller {
 		return redirect(routes.UserController.show(User.find(id).username));
 	}
 	
+	public static Result unfollow(long id){
+		User.removeFollower(id, SessionHelper.currentUser(ctx()));
+		return redirect(routes.UserController.show(User.find(id).username));
+	}
+	
 	/**
 	 * Delete the user with this username
 	 * @param username username of the user to be deleted

@@ -10,10 +10,16 @@
 			<img src='@routes.Assets.at("images/default-avatar.png")' class="avatar-profile"/>
 				<h3> @user.username </h3>
 			<div class=''>
+			@if(SessionHelper.currentUser(ctx()) != null){
 				@if(SessionHelper.currentUser(ctx()) == user){
 					@views.html.post._postForm(postForm, "/post/new")
 				} else {
+				 @if(SessionHelper.currentUser(ctx()).following.contains(user) == false){
 					<a href="@routes.UserController.follow(user.id)" class="btn btn-primary"> Follow </a>
+				} else {
+					<a href="@routes.UserController.unfollow(user.id)" class="btn btn-danger"> Unfollow </a>
+				}
+				}
 				}
 			</div> 
 		</div>

@@ -1,9 +1,18 @@
-
+@(posts: List[Post])
 @main("Index", "index"){
 	<div class="container">
 		
 		<h1> @Messages("welcome") </h1>
 		<h4> @Messages("number", 2) </h4>
-
+		
+		<h1> Feed: </h1>
+		@for(post <- posts){
+			<li> @post.content, at @post.updatedAt
+							@if(SessionHelper.currentUser(ctx()) == post.author){
+								<a href='@routes.PostController.delete(post.id)' onclick="return confirm('Are you sure you want to delete this post?');"
+							class="btn btn-danger btn-xs">Delete</a>
+							}
+						 </li>
+		}
 	</div>
 }
