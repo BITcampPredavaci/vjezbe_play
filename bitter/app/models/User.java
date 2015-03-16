@@ -61,11 +61,17 @@ public class User extends Model {
 	public boolean admin;
 
 	@ManyToMany
-	@JoinTable(name = "followers", joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") }, inverseJoinColumns = { @JoinColumn(name = "follower_id", referencedColumnName = "id") })
+	@JoinTable(name = "followers", 
+	joinColumns = 
+{ @JoinColumn(name = "user_id", referencedColumnName = "id") }, 
+	inverseJoinColumns =
+{ @JoinColumn(name = "follower_id", referencedColumnName = "id") })
 	public List<User> followers;
 
 	@ManyToMany
-	@JoinTable(name = "followers", joinColumns = { @JoinColumn(name = "follower_id", referencedColumnName = "id") }, inverseJoinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") })
+	@JoinTable(name = "followers", 
+	joinColumns = { @JoinColumn(name = "follower_id", referencedColumnName = "id") }, 
+	inverseJoinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") })
 	public List<User> following;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "author")

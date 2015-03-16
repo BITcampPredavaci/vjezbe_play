@@ -1,9 +1,13 @@
 package controllers;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import helpers.MailHelper;
 import models.User;
+import play.Logger;
 import play.Play;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -14,10 +18,21 @@ import play.libs.F.Promise;
 import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
 import play.mvc.Controller;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
 import play.mvc.Result;
 import models.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
+
+
+
+
+
+import com.google.common.io.Files;
+
+
 
 //include a specific folder(package) from views
 import views.html.static_pages.*;
@@ -69,7 +84,7 @@ public class StaticPagesController extends Controller {
 	 */
 	public static Promise<Result> sendMail() {
 		//need this to get the google recapctha value
-		DynamicForm temp = DynamicForm.form().bindFromRequest();
+		final DynamicForm temp = DynamicForm.form().bindFromRequest();
 		
 		/* send a request to google recaptcha api with the value of our secret code and the value
 		 * of the recaptcha submitted by the form */
@@ -85,8 +100,6 @@ public class StaticPagesController extends Controller {
 					public Result apply(WSResponse response) {
 						//get the response as JSON
 						JsonNode json = response.asJson();
-						System.out.println(json);
-						System.out.println(temp.get("g-recaptcha-response"));
 						Form<Contact> submit = Form.form(Contact.class)
 								.bindFromRequest();
 						
@@ -110,6 +123,25 @@ public class StaticPagesController extends Controller {
 				});
 		//return the promisse
 		return holder;
+	}
+	
+	public static Result showFileUpload(){
+		return ok(fileUpload.render());
+	}
+	
+	public static Result saveFile(){
+		MultipartFormData body = request().body().asMultipartFormData();
+		FilePart filePart = body.getFile("image");
+		Logger.debug("Content type: " + filePart.getContentType());
+		Logger.debug("Key: " + filePart.getKey());
+		File image = filePart.getFile();
+		try {
+			Files.move(image, new File("./public/images/"+new Date().toString()+filePart.getFilename()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return TODO;
 	}
 
 }

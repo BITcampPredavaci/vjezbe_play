@@ -8,6 +8,8 @@ GET    /about               controllers.StaticPagesController.about()
 GET    /loginToComplete     controllers.StaticPagesController.loginToComplete()
 POST   /contact             controllers.StaticPagesController.sendMail()
 GET    /contact             controllers.StaticPagesController.contact()
+POST   /fileupload          controllers.StaticPagesController.saveFile()
+GET    /fileupload          controllers.StaticPagesController.showFileUpload()
 
 POST   /register            controllers.UserController.create()
 GET    /register            controllers.UserController.newUser()
