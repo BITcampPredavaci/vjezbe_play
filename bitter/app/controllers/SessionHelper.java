@@ -18,7 +18,10 @@ public class SessionHelper {
 	}
 	
 	public static boolean isAdmin(Context ctx){
-		return false;
+		User u = currentUser(ctx);
+		if( u == null)
+			return false;
+		return u.admin;
 	}
 
 }

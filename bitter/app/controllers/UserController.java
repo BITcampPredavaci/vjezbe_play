@@ -1,53 +1,72 @@
 package controllers;
 
 import helpers.*;
+import play.Logger;
 import play.data.Form;
 import play.mvc.*;
+import play.mvc.Http.MultipartFormData;
 import views.html.user.*;
-
 import models.*;
+
 /**
- * Controller for our User
- * It supports CRUD operations
+ * Controller for our User It supports CRUD operations
+ * 
  * @author benjamin
  *
  */
 public class UserController extends Controller {
-	
+
 	@Security.Authenticated(AdminFilter.class)
 	public static Result index() {
 		return ok(index.render(User.all()));
 	}
+
 	/**
 	 * Action to show the registration page
+	 * 
 	 * @return registration page
 	 */
 	public static Result newUser() {
 		return ok(newUser.render(new Form<User>(User.class)));
 	}
+
 	/**
-	 * Handles the Post submit from the registration page
-	 * Checks that no error exist in the form
-	 * and saves the user
-	 * @return return to the registration page in case of errors or to the
-	 * user profile page in case the registration went well
+	 * Handles the Post submit from the registration page Checks that no error
+	 * exist in the form and saves the user
+	 * 
+	 * @return return to the registration page in case of errors or to the user
+	 *         profile page in case the registration went well
 	 */
 	public static Result create() {
 		Form<User> submit = Form.form(User.class).bindFromRequest();
+
 		if (submit.hasErrors() || submit.hasGlobalErrors()) {
 			return ok(newUser.render(submit));
 		}
+		MultipartFormData body = request().body().asMultipartFormData();
 		User u = submit.get();
+		if (body.getFile("avatar") != null) {
+			String fileError = u.avatar.upload(body.getFile("avatar"),
+					User.avatarSettings);
+			if (fileError != null) {
+				submit.reject(fileError);
+			}
+		}
+
 		if (!User.create(u)) {
 			return ok(newUser.render(submit));
 		}
 		SessionController.loginUser(u.username);
 		return redirect("/@" + u.username);
 	}
+
 	/**
 	 * Shows the profile page of the user
-	 * @param username username of the user whose profile we want to show
-	 * In case there is no user with that username a not found response is given @See StaticPagesController
+	 * 
+	 * @param username
+	 *            username of the user whose profile we want to show In case
+	 *            there is no user with that username a not found response is
+	 *            given @See StaticPagesController
 	 * @return the users profile page
 	 */
 	public static Result show(String username) {
@@ -58,10 +77,14 @@ public class UserController extends Controller {
 		else
 			return ok(show.render(u, new Form<Post>(Post.class)));
 	}
+
 	/**
 	 * Only a logged in user can see this page
-	 * @param username the username of the user we want to edit
-	 * @return badRequest if an unauthorized user wants to edit the data, edit form otherwise
+	 * 
+	 * @param username
+	 *            the username of the user we want to edit
+	 * @return badRequest if an unauthorized user wants to edit the data, edit
+	 *         form otherwise
 	 */
 	@Security.Authenticated(CurrentUserFilter.class)
 	public static Result edit(String username) {
@@ -74,9 +97,12 @@ public class UserController extends Controller {
 		editForm.get().password = "";
 		return ok(edit.render(editForm, currentUser));
 	}
+
 	/**
 	 * POST handle for the @See edit request
-	 * @param username username of the user whose data we are editing
+	 * 
+	 * @param username
+	 *            username of the user whose data we are editing
 	 * @return redirect to the form in case of error, user profile otherwise
 	 */
 	public static Result update(String username) {
@@ -93,25 +119,29 @@ public class UserController extends Controller {
 		SessionController.loginUser(u.username);
 		return redirect("/@" + u.username);
 	}
-	
+
 	/**
 	 * Handles the follow relation
-	 * @param id the user the current user is following
+	 * 
+	 * @param id
+	 *            the user the current user is following
 	 * @return redirect to the followed users profile page
 	 */
-	public static Result follow(long id){
+	public static Result follow(long id) {
 		User.addFollower(id, SessionHelper.currentUser(ctx()));
 		return redirect(routes.UserController.show(User.find(id).username));
 	}
-	
-	public static Result unfollow(long id){
+
+	public static Result unfollow(long id) {
 		User.removeFollower(id, SessionHelper.currentUser(ctx()));
 		return redirect(routes.UserController.show(User.find(id).username));
 	}
-	
+
 	/**
 	 * Delete the user with this username
-	 * @param username username of the user to be deleted
+	 * 
+	 * @param username
+	 *            username of the user to be deleted
 	 * @return user list
 	 * 
 	 */
@@ -119,8 +149,10 @@ public class UserController extends Controller {
 	public static Result delete(String username) {
 		User currentUser = SessionHelper.currentUser(ctx());
 		if (currentUser.username.equals(username)
-				|| SessionHelper.isAdmin(ctx()))
+				|| SessionHelper.isAdmin(ctx())){
 			User.deleteUser(username);
+			Logger.info("Deleted user: " + username);
+		}
 		return redirect("/users");
 	}
 

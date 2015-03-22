@@ -15,5 +15,6 @@ libraryDependencies ++= Seq(
   "org.webjars" %% "webjars-play" % "2.3.0-2",
   "org.webjars" % "bootstrap" % "3.1.1-2",
   "com.typesafe.play" %% "play-mailer" % "2.4.0",
-  "mysql" % "mysql-connector-java" % "5.1.18"
+  "mysql" % "mysql-connector-java" % "5.1.18",
+  "commons-io" % "commons-io" % "2.3"
 )

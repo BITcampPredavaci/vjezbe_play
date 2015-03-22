@@ -3,6 +3,13 @@
 
 # --- !Ups
 
+create table file_helper (
+  id                        bigint not null,
+  file_name                 varchar(255),
+  default_file_path         varchar(255),
+  constraint pk_file_helper primary key (id))
+;
+
 create table post (
   id                        bigint not null,
   content                   varchar(255),
@@ -18,6 +25,7 @@ create table bitter_user (
   username                  varchar(255),
   password                  varchar(255),
   admin                     boolean,
+  avatar_id                 bigint,
   created_at                timestamp not null,
   updated_at                timestamp not null,
   constraint uq_bitter_user_email unique (email),
@@ -31,12 +39,16 @@ create table followers (
   follower_id                    bigint not null,
   constraint pk_followers primary key (user_id, follower_id))
 ;
+create sequence file_helper_seq;
+
 create sequence post_seq;
 
 create sequence bitter_user_seq;
 
 alter table post add constraint fk_post_author_1 foreign key (author_id) references bitter_user (id) on delete restrict on update restrict;
 create index ix_post_author_1 on post (author_id);
+alter table bitter_user add constraint fk_bitter_user_avatar_2 foreign key (avatar_id) references file_helper (id) on delete restrict on update restrict;
+create index ix_bitter_user_avatar_2 on bitter_user (avatar_id);
 
 
 
@@ -48,6 +60,8 @@ alter table followers add constraint fk_followers_bitter_user_02 foreign key (fo
 
 SET REFERENTIAL_INTEGRITY FALSE;
 
+drop table if exists file_helper;
+
 drop table if exists post;
 
 drop table if exists bitter_user;
@@ -55,6 +69,8 @@ drop table if exists bitter_user;
 drop table if exists followers;
 
 SET REFERENTIAL_INTEGRITY TRUE;
+
+drop sequence if exists file_helper_seq;
 
 drop sequence if exists post_seq;
 

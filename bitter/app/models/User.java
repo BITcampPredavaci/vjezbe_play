@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.Email;
@@ -61,21 +62,26 @@ public class User extends Model {
 	public boolean admin;
 
 	@ManyToMany
-	@JoinTable(name = "followers", 
-	joinColumns = 
-{ @JoinColumn(name = "user_id", referencedColumnName = "id") }, 
-	inverseJoinColumns =
-{ @JoinColumn(name = "follower_id", referencedColumnName = "id") })
+	@JoinTable(name = "followers", joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") }, inverseJoinColumns = { @JoinColumn(name = "follower_id", referencedColumnName = "id") })
 	public List<User> followers;
 
 	@ManyToMany
-	@JoinTable(name = "followers", 
-	joinColumns = { @JoinColumn(name = "follower_id", referencedColumnName = "id") }, 
-	inverseJoinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") })
+	@JoinTable(name = "followers", joinColumns = { @JoinColumn(name = "follower_id", referencedColumnName = "id") }, inverseJoinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") })
 	public List<User> following;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
 	public List<Post> posts;
+
+	public static FileSettings avatarSettings = new FileSettings(new String[] {
+			"image/png", "image/jpg", "image/jpeg" }, "users/avatar/", 1);
+
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval=true)
+	public FileHelper avatar = new FileHelper("images/default-avatar.png");
+	
+	public User(){
+		avatar  = new FileHelper("images/default-avatar.png");
+		admin = false;
+	}
 
 	public User(String email, String password, String username, boolean admin) {
 		this.email = email;
@@ -187,7 +193,9 @@ public class User extends Model {
 	 *            the username we want to delete
 	 */
 	public static void deleteUser(String username) {
-		User.find(username).delete();
+		User u = find(username);
+		u.avatar.deleteFile();
+		u.delete();
 	}
 
 	public static void addFollower(long user_id, User follower) {
@@ -196,15 +204,15 @@ public class User extends Model {
 			u.followers.add(follower);
 		u.save();
 	}
-	
+
 	public static void removeFollower(long user_id, User follower) {
 		User u = find.byId(user_id);
 		if (u.followers.contains(follower))
 			u.followers.remove(follower);
 		u.save();
 	}
-	
-	public List<Post> getFeed(){
+
+	public List<Post> getFeed() {
 		return Post.getFeed(following);
 	}
 

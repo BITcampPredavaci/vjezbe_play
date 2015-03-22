@@ -16,6 +16,7 @@ public class CurrentUserFilter extends Security.Authenticator {
 
 	@Override
 	public String getUsername(Context ctx) {
+		
 		if(!ctx.session().containsKey("username"))
 			return null;
 		String username = ctx.session().get("username");
