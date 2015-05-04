@@ -29,7 +29,7 @@ public class Image extends Model {
 	public boolean isPublished;
 	
 	
-	public static Cloudinary cloudinary = new Cloudinary("cloudinary://{key}:{secret}@{cloud}");
+	public static Cloudinary cloudinary = new Cloudinary("cloudinary://{id}:{secret}{cloud}");
 	
 	public static Finder<Integer, Image> find = new Finder<Integer, Image>(Integer.class, Image.class);
 	
