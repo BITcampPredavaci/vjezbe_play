@@ -37,7 +37,7 @@ public class PostController extends Controller {
 	 */
 	@Security.Authenticated(CurrentUserFilter.class)
 	public static Result delete(long id) {
-		User currentUser = SessionHelper.currentUser(ctx());
+		BitUser currentUser = SessionHelper.currentUser(ctx());
 		Post p = Post.find(id);
 		if (p == null) {
 			return badRequest(views.html.static_pages.loginToComplete

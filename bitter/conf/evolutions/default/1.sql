@@ -25,6 +25,7 @@ create table bitter_user (
   username                  varchar(255),
   password                  varchar(255),
   admin                     boolean,
+  credits                   double,
   avatar_id                 bigint,
   created_at                timestamp not null,
   updated_at                timestamp not null,
@@ -38,6 +39,12 @@ create table followers (
   user_id                        bigint not null,
   follower_id                    bigint not null,
   constraint pk_followers primary key (user_id, follower_id))
+;
+
+create table bitter_user_file_helper (
+  bitter_user_id                 bigint not null,
+  file_helper_id                 bigint not null,
+  constraint pk_bitter_user_file_helper primary key (bitter_user_id, file_helper_id))
 ;
 create sequence file_helper_seq;
 
@@ -56,6 +63,10 @@ alter table followers add constraint fk_followers_bitter_user_01 foreign key (us
 
 alter table followers add constraint fk_followers_bitter_user_02 foreign key (follower_id) references bitter_user (id) on delete restrict on update restrict;
 
+alter table bitter_user_file_helper add constraint fk_bitter_user_file_helper_bi_01 foreign key (bitter_user_id) references bitter_user (id) on delete restrict on update restrict;
+
+alter table bitter_user_file_helper add constraint fk_bitter_user_file_helper_fi_02 foreign key (file_helper_id) references file_helper (id) on delete restrict on update restrict;
+
 # --- !Downs
 
 SET REFERENTIAL_INTEGRITY FALSE;
@@ -67,6 +78,8 @@ drop table if exists post;
 drop table if exists bitter_user;
 
 drop table if exists followers;
+
+drop table if exists bitter_user_file_helper;
 
 SET REFERENTIAL_INTEGRITY TRUE;
 

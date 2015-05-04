@@ -1,0 +1,43 @@
+@(imageForm: Form[Image], images: List[Image])
+
+@import helper._
+
+@main("Image Share") {
+
+<div class='col-md-4'>
+	
+	@helper.form(routes.ImageController.create(), 'enctype -> "multipart/form-data"){
+		@helper.inputFile(imageForm("image_url"))
+		<input type="submit" value="Upload" />
+	}
+
+	
+	
+	
+</div>
+<div class='row'>
+<div class='col-md-4'>
+
+	@for(image <- images) {
+		<div class='thumbnail'>
+			<img src='@image.getSize(100, 100)' />
+		</div>
+	}
+
+</div>
+
+<div class='col-md-4'>
+
+	@for(image <- images) {
+		<div class='thumbnail'>
+			<img src='@image.getSize(250, 250)' />
+			<a href="@routes.ImageController.delete(image.id)" class='btn btn-sm btn-danger'>Delete</a>
+		</div>
+	}
+
+</div>
+
+</div>
+
+
+}

@@ -3,7 +3,7 @@ package controllers;
 
 import org.apache.commons.codec.binary.Base64;
 
-import models.User;
+import models.BitUser;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
@@ -26,7 +26,7 @@ public class SessionController extends Controller {
 		public String password;
 
 		public String validate() {
-			if (User.authenticate(emailOrUsername, password) == null) {
+			if (BitUser.authenticate(emailOrUsername, password) == null) {
 				return "Email/Password not valid";
 			}
 			return null;
@@ -44,7 +44,7 @@ public class SessionController extends Controller {
 			return ok(login.render(submit));
 		}
 		Login l = submit.get();
-		User u = User.authenticate(l.emailOrUsername, l.password);
+		BitUser u = BitUser.authenticate(l.emailOrUsername, l.password);
 		if (u == null) {
 			return ok(login.render(submit));
 		} else {
@@ -66,26 +66,5 @@ public class SessionController extends Controller {
 	public static void logoutUser(){
 		session().clear();
 	}
-	
-	public String getUsername(Context ctx) {
-
-        Logger.debug("Some data: ");
-        Logger.debug(ctx.request().getHeader("Authorization"));
-        Logger.debug(new String(Base64.decodeBase64(ctx.request().getHeader("Authorization") )));
-        Logger.debug(ctx.request().username());
-        Logger.debug("=========");
-
-        User user = null;
-        String[] authTokenHeaderValues = ctx.request().headers().get(SecurityController.AUTH_TOKEN_HEADER);
-        if ((authTokenHeaderValues != null) && (authTokenHeaderValues.length == 1) && (authTokenHeaderValues[0] != null)) {
-            user = models.User.findByAuthToken(authTokenHeaderValues[0]);
-            if (user != null) {
-                ctx.args.put("user", user);
-                return user.getEmailAddress();
-            }
-        }
-
-        return null;
-    }
 
 }

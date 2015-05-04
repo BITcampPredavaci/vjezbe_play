@@ -21,6 +21,11 @@ GET    /users               controllers.UserController.index()
 GET    /follow/:id          controllers.UserController.follow(id: Long)
 GET    /unfollow/:id        controllers.UserController.unfollow(id: Long)
 
+GET    /creditpurchase      controllers.UserController.showPurchase()
+POST   /creditpurchase      controllers.UserController.purchaseProcessing()
+GET    /creditsuccess       controllers.UserController.creditSuccess()
+GET    /creditfail          controllers.UserController.creditFail()
+
 GET    /login               controllers.SessionController.login()
 POST   /login               controllers.SessionController.loginSubmit()
 GET    /logout              controllers.SessionController.logout()
@@ -28,6 +33,8 @@ GET    /logout              controllers.SessionController.logout()
 
 POST   /post/new            controllers.PostController.create()
 GET    /post/delete         controllers.PostController.delete(id: Long)
+POST /user/addToGallery		controllers.UserController.addToGallery()
+GET /removeFromGallery/:id	controllers.UserController.removeFromGallery(id: Long)
 
 
 # Map static resources from the /public folder to the /assets URL path

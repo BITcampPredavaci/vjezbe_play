@@ -13,6 +13,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import play.Logger;
 import play.db.ebean.Model;
+import play.db.ebean.Model.Finder;
 import play.mvc.Http.MultipartFormData.FilePart;
 
 @Entity
@@ -28,6 +29,14 @@ public class FileHelper extends Model {
 	public FileHelper(String defaultFilePath){
 		defaultFilePath = defaultFilePath;
 	}
+	
+	public FileHelper(){
+		
+	}
+	
+	public static Finder<Long, FileHelper> find = new Finder<Long, FileHelper>(Long.class,
+			FileHelper.class);
+
 
 	public String upload(FilePart filePart, FileSettings settings) {
 		

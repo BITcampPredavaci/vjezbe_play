@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import helpers.MailHelper;
-import models.User;
+import models.BitUser;
 import play.Logger;
 import play.Play;
 import play.data.DynamicForm;
@@ -55,7 +55,7 @@ public class StaticPagesController extends Controller {
 	}
 
 	public static Result index() {
-		User currentUser = SessionHelper.currentUser(ctx());
+		BitUser currentUser = SessionHelper.currentUser(ctx());
 		if(currentUser == null)
 		return ok(index.render(new ArrayList<Post>()));
 		else{

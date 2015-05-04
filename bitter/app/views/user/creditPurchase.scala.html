@@ -1,0 +1,25 @@
+
+
+@main("Users", "users"){
+	<div class="container">
+	<form action="/creditpurchase" method="post">
+		<input type="number" minvalue="1" maxvalue="10" name="credit_amount" id="credit_amount" value="1" />
+		<h5> Price: <span id="price"> 1.5 </span> €</h5>
+		<button type="submit">
+	<img src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" align="left" style="margin-right:7px;">
+		</button>
+	</form>
+	</div>
+	
+	<script>
+	$(document).ready(function(){
+		
+	$('#credit_amount').change(function(){
+		
+		var price = 1.5 * $('#credit_amount').val();
+		$('#price').html(price);
+	});
+	});
+	</script>
+
+}

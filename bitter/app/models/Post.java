@@ -37,7 +37,7 @@ public class Post extends Model{
 	public Date updatedAt;
 	
 	@ManyToOne
-	public User author;
+	public BitUser author;
 	
 	static Finder<Long, Post> find = new Finder<Long, Post>(Long.class, Post.class);
 	
@@ -59,7 +59,7 @@ public class Post extends Model{
 		return find.byId(id);
 	}
 	
-	public static List<Post> getFeed(List<User> authors){
+	public static List<Post> getFeed(List<BitUser> authors){
 		return find.where().in("author", authors).findList();
 	}
 

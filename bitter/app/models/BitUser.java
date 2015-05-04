@@ -30,7 +30,7 @@ import com.avaje.ebean.annotation.UpdatedTimestamp;
 @Entity
 @Table(name = "bitter_user")
 /* to ensure we can work with any sql database */
-public class User extends Model {
+public class BitUser extends Model {
 
 	@Id
 	public long id;
@@ -60,14 +60,16 @@ public class User extends Model {
 	public Date updatedAt;
 
 	public boolean admin;
+	
+	public double credits;
 
 	@ManyToMany
 	@JoinTable(name = "followers", joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") }, inverseJoinColumns = { @JoinColumn(name = "follower_id", referencedColumnName = "id") })
-	public List<User> followers;
+	public List<BitUser> followers;
 
 	@ManyToMany
 	@JoinTable(name = "followers", joinColumns = { @JoinColumn(name = "follower_id", referencedColumnName = "id") }, inverseJoinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") })
-	public List<User> following;
+	public List<BitUser> following;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
 	public List<Post> posts;
@@ -78,12 +80,15 @@ public class User extends Model {
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval=true)
 	public FileHelper avatar = new FileHelper("images/default-avatar.png");
 	
-	public User(){
+	@ManyToMany(cascade = CascadeType.ALL)
+	public List<FileHelper> gallery;
+	
+	public BitUser(){
 		avatar  = new FileHelper("images/default-avatar.png");
 		admin = false;
 	}
 
-	public User(String email, String password, String username, boolean admin) {
+	public BitUser(String email, String password, String username, boolean admin) {
 		this.email = email;
 		this.password = password;
 		this.username = username;
@@ -91,7 +96,7 @@ public class User extends Model {
 		// hashPassword();
 	}
 
-	public User(String email, String password, String username) {
+	public BitUser(String email, String password, String username) {
 		this.email = email;
 		this.password = password;
 		this.username = username;
@@ -99,8 +104,8 @@ public class User extends Model {
 		hashPassword();
 	}
 
-	static Finder<Long, User> find = new Finder<Long, User>(Long.class,
-			User.class);
+	static Finder<Long, BitUser> find = new Finder<Long, BitUser>(Long.class,
+			BitUser.class);
 
 	/**
 	 * Create a new user
@@ -115,7 +120,7 @@ public class User extends Model {
 	 */
 	public static boolean create(String email, String password, String username) {
 		try {
-			User u = new User(email, password, username);
+			BitUser u = new BitUser(email, password, username);
 			if (u.validate() != null)
 				return false;
 			u.save();
@@ -126,13 +131,13 @@ public class User extends Model {
 	}
 
 	/**
-	 * Saves a User object, the password is hashed before save @see hashPassword
+	 * Saves a BitUser object, the password is hashed before save @see hashPassword
 	 * 
 	 * @param u
 	 *            the user object we want to save
 	 * @return true if save is successful, false otherwise
 	 */
-	public static boolean create(User u) {
+	public static boolean create(BitUser u) {
 		try {
 			if (u.validate() != null)
 				return false;
@@ -145,7 +150,7 @@ public class User extends Model {
 		}
 	}
 
-	public static User find(long id) {
+	public static BitUser find(long id) {
 		return find.byId(id);
 	}
 
@@ -157,14 +162,14 @@ public class User extends Model {
 	 *            the username or email we are searching for
 	 * @return the user or null
 	 */
-	public static User find(String usernameOrEmail) {
+	public static BitUser find(String usernameOrEmail) {
 		return find.where(
 				String.format("username = '%s' OR email = '%s'",
 						usernameOrEmail, usernameOrEmail)).findUnique();
 
 	}
 
-	public static List<User> all() {
+	public static List<BitUser> all() {
 		return find.all();
 	}
 
@@ -172,10 +177,10 @@ public class User extends Model {
 	 * Rehash the password (the input is from a form so we expect plain text)
 	 * 
 	 * @param u
-	 *            User to update
+	 *            BitUser to update
 	 * @return true if save is successful
 	 */
-	public static boolean update(User u) {
+	public static boolean update(BitUser u) {
 		try {
 			u.hashPassword();
 			u.update();
@@ -193,20 +198,20 @@ public class User extends Model {
 	 *            the username we want to delete
 	 */
 	public static void deleteUser(String username) {
-		User u = find(username);
+		BitUser u = find(username);
 		u.avatar.deleteFile();
 		u.delete();
 	}
 
-	public static void addFollower(long user_id, User follower) {
-		User u = find.byId(user_id);
+	public static void addFollower(long user_id, BitUser follower) {
+		BitUser u = find.byId(user_id);
 		if (!u.followers.contains(follower))
 			u.followers.add(follower);
 		u.save();
 	}
 
-	public static void removeFollower(long user_id, User follower) {
-		User u = find.byId(user_id);
+	public static void removeFollower(long user_id, BitUser follower) {
+		BitUser u = find.byId(user_id);
 		if (u.followers.contains(follower))
 			u.followers.remove(follower);
 		u.save();
@@ -223,10 +228,10 @@ public class User extends Model {
 	 *            the email/username of the user
 	 * @param password
 	 *            the password
-	 * @return the User object if the login is successful or null otherwise
+	 * @return the BitUser object if the login is successful or null otherwise
 	 */
-	public static User authenticate(String usernameOrEmail, String password) {
-		User u = find(usernameOrEmail);
+	public static BitUser authenticate(String usernameOrEmail, String password) {
+		BitUser u = find(usernameOrEmail);
 		if (u == null)
 			return null;
 		if (HashHelper.checkPassword(password, u.password)) {
@@ -257,12 +262,12 @@ public class User extends Model {
 	 */
 	public String validate() {
 		if (find.where().eq("email", email).findRowCount() > 0) {
-			User other = find.where().eq("email", email).findUnique();
+			BitUser other = find.where().eq("email", email).findUnique();
 			if (other.id != this.id && this.id != 0)
 				return "Email taken";
 		}
 		if (find.where().eq("username", username).findRowCount() > 0) {
-			User other = find.where().eq("username", username).findUnique();
+			BitUser other = find.where().eq("username", username).findUnique();
 			if (other.id != this.id && this.id != 0)
 				return "Username taken";
 		}

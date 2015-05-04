@@ -18,6 +18,25 @@
 			@if(SessionHelper.currentUser(ctx()) != null){
 				@if(SessionHelper.currentUser(ctx()) == user){
 					@views.html.post._postForm(postForm, "/post/new")
+					
+					@*add picture to gallery*@
+					<form  method="post" action="/user/addToGallery" class="form-horizontal" id="userform"
+						enctype="multipart/form-data" >
+							 <div class="form-group">
+						    <label for="avatar" class="col-sm-2 control-label">Avatar</label>
+						    <div class="col-sm-10 col-md-5">
+						      <input type="file" class='form-control'
+						       name="gallery" id="gallery" value='' />
+						    </div>
+						  </div>
+						  <input type="submit" value="Add" />
+  					</form>
+					
+					@for(image <- user.gallery){
+						<img src="@routes.Assets.at(image.getFilePath())" class="avatar-profile" />
+						<a href="./removeFromGallery/@image.id"> Remove </a>
+					}
+					
 				} else {
 				 @if(SessionHelper.currentUser(ctx()).following.contains(user) == false){
 					<a href="@routes.UserController.follow(user.id)" class="btn btn-primary"> Follow </a>
